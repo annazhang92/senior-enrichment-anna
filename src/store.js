@@ -124,7 +124,7 @@ const updatePuppy = (id,puppy,history)=> {
   .then( puppy=> store.dispatch({
     type: 'UPDATE_PUPPY',
     puppy
-  }))
+  }))//don't put any push history here.....
   }
   } 
   return (dispatch)=> {

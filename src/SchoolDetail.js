@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import store,{updatePuppy}  from './store';
 import { connect } from 'react-redux';
 
-const SchoolDetail = ({school,thisSchoolPuppies,notThisSchoolPuppies,id})=> {
-  const otherPuppiesList = notThisSchoolPuppies.map(puppy=><option key={puppy.id} value={puppy.id}>{puppy.name}</option>)
-  const PuppiesList = thisSchoolPuppies.map(puppy=><li key={puppy.id} value={puppy.name}>{puppy.name}</li>)
-    
+class SchoolDetail extends Component{
+      constructor({school,id,thisSchoolPuppies,notThisSchoolPuppies}){
+      super();
+      }
+
+      render(){
+      const otherPuppiesList = this.props.notThisSchoolPuppies.map(puppy=><option key={puppy.id} value={puppy.id}>{puppy.name}</option>)
+      const PuppiesList = this.props.thisSchoolPuppies.map(puppy=><li key={puppy.id} value={puppy.name}>{puppy.name}</li>)
           return (
             <div>
-            {school &&
+            {this.props.school &&
             <ul>
-            <li>{school.name}</li>
-            <li>{school.location}</li>
+            <li>{this.props.school.name}</li>
+            <li>{this.props.school.location}</li>
             </ul>
             }
 
@@ -19,13 +23,15 @@ const SchoolDetail = ({school,thisSchoolPuppies,notThisSchoolPuppies,id})=> {
             <ul>
             {PuppiesList}
             </ul>
-            <select onChange={(ev)=>updatePuppy(ev.target.value, {schoolId:id})}>
+            <select onChange={(ev)=>this.props.updatePuppy(ev.target.value, {schoolId:this.props.id})}>
+            
             <option>None</option>
             {otherPuppiesList}
             </select>
             </div>
           );
       }
+}
   
 
     const mapStateToProps = ({ schools,puppies }, { id })=> {
