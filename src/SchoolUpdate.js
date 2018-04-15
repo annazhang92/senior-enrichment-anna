@@ -8,7 +8,8 @@ class SchoolUpdates extends Component{
     super();
       this.state = {
           name:school ? school.name : '',
-          location:school? school.location: ''
+          location:school? school.location: '',
+          infor:''
       };
 
       this.onSave=this.onSave.bind(this)
@@ -27,6 +28,7 @@ class SchoolUpdates extends Component{
         ev.preventDefault();
         const school = { id:this.props.id, name: this.state.name, location: this.state.location};
         this.props.updateSchool(this.props.id, school)
+        this.setState({infor:'Information has been updated'})
       }
 
     onChange(ev){
@@ -45,6 +47,12 @@ class SchoolUpdates extends Component{
     // handleSubmit(){
     // this.props.updatePuppy(ev.target.name, {schoolId:this.props.id})
     // }
+    componentWillReceiveProps(nextProps){
+      this.setState({
+        name: nextProps.school ? nextProps.school.name : '',
+        location: nextProps.school ? nextProps.school.location : ''
+      });
+    }
 
     render(){
         const { onChangeName, onSave, onChange} = this;
@@ -54,7 +62,7 @@ class SchoolUpdates extends Component{
         return (
           <div>
           <h2>School Infor</h2>
-          <form onSubmit={ onSave }>
+          <form onSubmit={ onSave}>
             <div><p>Name</p><input name = 'name' value={ name } onChange={ onChange }/></div>
             <div><p>Location</p><input name ='location' value={ location } onChange={ onChange }/></div>
             <button>Save</button>
@@ -73,6 +81,8 @@ class SchoolUpdates extends Component{
           </select>
           </div>
           }
+
+          <p>{this.state.infor}</p>
 
           </div>
         );

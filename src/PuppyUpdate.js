@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 
 
 class PuppyUpdates extends Component{
-    constructor({puppy,id}){
+    constructor({puppy,id,thisPuppySchool,notThisPuppySchools}){
     super();
       this.state = {
           name:puppy ? puppy.name : '',
-          gpa:puppy? puppy.gpa: ''
+          gpa:puppy? puppy.gpa: '',
+          infor:''
       };
 
       this.onSave=this.onSave.bind(this)
@@ -26,7 +27,8 @@ class PuppyUpdates extends Component{
     onSave(ev){
         ev.preventDefault();
         const puppy = { id:this.props.id, name: this.state.name, gpa: this.state.gpa};
-        this.props.updatePuppy(this.props.id, puppy)
+        this.props.updatePuppy(this.props.id, puppy);
+        this.setState({infor:'Information has been updated'})
       }
 
     onChange(ev){
@@ -45,10 +47,18 @@ class PuppyUpdates extends Component{
     // handleSubmit(){
     // this.props.updatePuppy(ev.target.name, {schoolId:this.props.id})
     // }
+    componentWillReceiveProps(nextProps){
+      this.setState({
+        name: nextProps.puppy ? nextProps.puppy.name : '',
+        gpa: nextProps.puppy ? nextProps.puppy.gpa : ''
+      });
+    }
 
     render(){
         const { onSave, onChange} = this;
         const { name,gpa } = this.state;
+        const otherSchoolsList = this.props.notThisPuppySchools.map(school=><option key={school.id} value={school.id}>{school.name}</option>)
+        const SchoolList = this.props.thisPuppySchool.map(school=><li key={school.id} value={school.name}>{school.name}</li>)
       
         return (
           <div>
@@ -58,16 +68,36 @@ class PuppyUpdates extends Component{
             <div><p>GPA</p><input name ='gpa' value={ gpa } onChange={ onChange }/></div>
             <button>Save</button>
           </form>
+
+          {this.props.puppies&&
+          <div>
+          <h2>This Puppy's School</h2>
+          <ul>
+          {SchoolList}
+          </ul>
+          <select onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
+          <option>None</option>
+          {otherSchoolsList}
+          </select>
+          </div>
+          }
           
+          <p>{this.state.infor}</p>
           </div>
         );
     }
 }
 
-    const mapStateToProps = ({ puppies }, { id })=> {
+    const mapStateToProps = ({ schools,puppies }, { id })=> {
+      
         const puppy =puppies.find( puppy => puppy.id === id);
+        const puppySchoolId=puppy? (puppy.schoolId):0;
+        const thisPuppySchool = schools.filter(school=>school.id===puppySchoolId)
+        const notThisPuppySchools= schools.filter(school=>school.id!==puppySchoolId)
         return {
           puppy,
+          thisPuppySchool,
+          notThisPuppySchools,
         };
       }
   

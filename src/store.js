@@ -102,7 +102,7 @@ const updateSchool = (id,school,history)=> {
     type: 'UPDATE_SCHOOL',
     school
   }))
-  .then( ()=> history.push('/schools'));
+  // .then( ()=> history.push('/schools'));
   }
   }
   return (dispatch)=> {
