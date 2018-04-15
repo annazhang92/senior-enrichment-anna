@@ -53,12 +53,16 @@ class SchoolUpdates extends Component{
         const PuppiesList = this.props.thisSchoolPuppies.map(puppy=><li key={puppy.id} value={puppy.name}>{puppy.name}</li>)
         return (
           <div>
-          <h2>Update School Infor</h2>
+          <h2>School Infor</h2>
           <form onSubmit={ onSave }>
             <div><p>Name</p><input name = 'name' value={ name } onChange={ onChange }/></div>
             <div><p>Location</p><input name ='location' value={ location } onChange={ onChange }/></div>
             <button>Save</button>
           </form>
+          
+
+          {this.props.school&&
+          <div>
           <h2>Puppies in this School</h2>
           <ul>
           {PuppiesList}
@@ -67,6 +71,9 @@ class SchoolUpdates extends Component{
           <option>None</option>
           {otherPuppiesList}
           </select>
+          </div>
+          }
+
           </div>
         );
     }

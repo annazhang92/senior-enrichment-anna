@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import store,{createCategory} from './store';
+import store,{deletePuppy} from './store';
 import { connect } from 'react-redux';
 
-const Puppies = ({puppies})=> {
+const Puppies = ({puppies,deletePuppy})=> {
 
       const PuppiesList = puppies.map( puppy => {
         return (
@@ -11,6 +11,8 @@ const Puppies = ({puppies})=> {
             <Link to={`/puppies/${puppy.id}`}>
               { puppy.name }
             </Link>
+            <Link to={`/updatepuppies/${puppy.id}`}><button>Edit</button></Link>
+            <button onClick={()=>deletePuppy(puppy.id)}>Delete</button>
           </li>
         );
       })
@@ -33,5 +35,12 @@ const Puppies = ({puppies})=> {
   
 
 
-  export default connect(mapStateToProps)(Puppies);
+  const mapDispatchToProps = (dispatch, { history })=> {
+    return {
+      deletePuppy: (puppyid)=> dispatch(deletePuppy(puppyid, history)),
+    };
+  };
+  
 
+
+  export default connect(mapStateToProps,mapDispatchToProps)(Puppies);

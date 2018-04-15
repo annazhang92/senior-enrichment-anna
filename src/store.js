@@ -7,11 +7,11 @@ const puppiesReducer = (state=[], action)=> {
       case 'SET_PUPPIES':
         state = action.puppies;
         break;
-        case 'CREATE_CATEGORY':
-        state = [...state, action.category];
+        case 'CREATE_PUPPY':
+        state = [...state, action.puppy];
         break;
-        case 'DESTROY_CATEGORY':
-        state = state.filter( category=> category.id !== action.category.id); 
+        case 'DESTROY_PUPPY':
+        state = state.filter( puppy=> puppy.id !== action.puppy.id); 
         break;
         case 'UPDATE_PUPPY':
         state = state.map(puppy=> puppy.id === action.puppy.id ? action.puppy : puppy); 
@@ -69,9 +69,43 @@ const puppiesReducer = (state=[], action)=> {
   }
   }
 
-
-  const saveSchool = (school,history)=> {
+  const deletePuppy = (id,history)=> {
     return (dispatch)=> {
+    return axios.delete(`/api/puppies/${id}`) 
+    .then( result => result.data)
+    .then( () => store.dispatch({
+      type: 'DESTROY_PUPPY',
+      puppy:{id}
+    }))
+  }
+  }
+
+
+//   const saveSchool = (school,history)=> {
+//     return (dispatch)=> {
+//     return axios.post('/api/schools/',school)
+//     .then( result => result.data)
+//     .then( school => store.dispatch({
+//       type: 'CREATE_SCHOOL',
+//       school
+//     }))
+//     .then( ()=> history.push('/schools'));
+//   }
+// }
+
+const updateSchool = (id,school,history)=> {
+  if(id){
+  return (dispatch)=> {
+  return axios.put(`/api/updateschools/${id}`,school)
+  .then( result => result.data)
+  .then( school => store.dispatch({
+    type: 'UPDATE_SCHOOL',
+    school
+  }))
+  .then( ()=> history.push('/schools'));
+  }
+  }
+  return (dispatch)=> {
     return axios.post('/api/schools/',school)
     .then( result => result.data)
     .then( school => store.dispatch({
@@ -82,19 +116,8 @@ const puppiesReducer = (state=[], action)=> {
   }
 }
 
-const updateSchool = (id,school,history)=> {
-  return (dispatch)=> {
-  return axios.put(`/api/updateschools/${id}`,school)
-  .then( result => result.data)
-  .then( school => store.dispatch({
-    type: 'UPDATE_SCHOOL',
-    school
-  }))
-  .then( ()=> history.push('/schools'));
-  }
-}
-
 const updatePuppy = (id,puppy,history)=> {
+  if(id){
   return (dispatch)=> {
   return axios.put(`/api/updatepuppies/${id}`,puppy)
   .then( result => result.data)
@@ -102,6 +125,16 @@ const updatePuppy = (id,puppy,history)=> {
     type: 'UPDATE_PUPPY',
     puppy
   }))
+  }
+  } 
+  return (dispatch)=> {
+    return axios.post('/api/puppies/',puppy)
+    .then( result => result.data)
+    .then( puppy => store.dispatch({
+      type: 'CREATE_PUPPY',
+      puppy
+    }))
+    .then( ()=> history.push('/puppies'));
   }
 }
 
@@ -134,4 +167,4 @@ const updatePuppy = (id,puppy,history)=> {
 
 
   export default store;
-  export {saveSchool,deleteSchool,updateSchool,updatePuppy};
+  export {deleteSchool,updateSchool,updatePuppy,deletePuppy};

@@ -9,6 +9,8 @@ import Puppies from './Puppies';
 import SchoolForm from './SchoolForm';
 import SchoolDetail from './SchoolDetail';
 import SchoolUpdate from './SchoolUpdate';
+import PuppyUpdate from './PuppyUpdate';
+import PuppyDetail from './PuppyDetail';
 
 const App =()=>{
     return (
@@ -19,9 +21,13 @@ const App =()=>{
         <Switch>
             <Route exact path='/schools' component={ Schools } />
             <Route exact path='/puppies' component={ Puppies } />
-            <Route exact path='/createschool' component={ SchoolForm } />
+            <Route exact path='/createschool' component={ SchoolUpdate } />
+            <Route exact path='/createpuppy' component={ PuppyUpdate } />
             <Route exact path='/schools/:id' render={({ match, history })=> <SchoolDetail id={ match.params.id*1} history={ history }/> } />
+            <Route exact path='/puppies/:id' render={({ match, history })=> <PuppyDetail id={ match.params.id*1} history={ history }/> } />
             <Route exact path='/updateschools/:id' render={({ match, history })=> <SchoolUpdate id={ match.params.id*1} history={ history }/> } />
+            <Route exact path='/updatepuppies/:id' render={({ match, history })=> <PuppyUpdate id={ match.params.id*1} history={ history }/> } />
+            
         </Switch>
         </div>
         </Router>

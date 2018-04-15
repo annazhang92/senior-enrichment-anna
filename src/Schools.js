@@ -12,7 +12,7 @@ const Schools = ({schools,deleteSchool})=> {
             <Link to={`/schools/${school.id}`}>
               { school.name }
             </Link>
-            <p>There are puppies</p>
+            <p>There are x puppies</p>
             <Link to={`/updateschools/${school.id}`}><button>Edit</button></Link>
             <button onClick={()=>deleteSchool(school.id)}>Delete</button>
           </li>
