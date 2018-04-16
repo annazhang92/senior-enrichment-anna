@@ -33,9 +33,7 @@ class PuppyDetail extends Component{
           <option>Change School</option>
           {otherSchoolsList}
           </select> */}
-          <div className='container'>
           {this.props.thisPuppySchool.length>0 ?  SchoolList: <p className='alert alert-info'>This puppy has no school</p>}
-          </div>
           </div>
           </div>
           );

@@ -12,13 +12,24 @@ class SchoolUpdates extends Component{
           location:school? school.location: '',
           description:school? school.description: '',
           imgUrl:school? school.imgUrl: '',
-          infor:''
+          infor:'',
+          errors:{}
       };
 
       this.onSave=this.onSave.bind(this)
       this.onChange=this.onChange.bind(this)
-      // this.handleChange=this.handleChange.bind(this)
-      // this.addStudent=this.addStudent.bind(this)
+      this.validators={
+        name:(value)=>{
+          if(!value){
+            return 'name is required'
+          }
+        },
+        location:(value)=>{
+          if(!value){
+            return 'location is required'
+          }
+        }
+      }
     }
 
 
@@ -29,6 +40,17 @@ class SchoolUpdates extends Component{
 
     onSave(ev){
         ev.preventDefault();
+        const errors = Object.keys(this.validators).reduce((memo,key)=>{
+          const validator =this.validators[key];
+          const value =this.state[key];
+          const error = validator(value);
+          if(error){memo[key]=error};
+          return memo;
+        },{})
+        this.setState({errors});
+        if(Object.keys(errors).length){
+          return;
+        }
         const school = { id:this.props.id, name: this.state.name, location: this.state.location, description:this.state.description, imgUrl:this.state.imgUrl};
         this.props.updateSchool(this.props.id, school)
         this.setState({infor:'Information has been updated'})
@@ -60,16 +82,16 @@ class SchoolUpdates extends Component{
 
     render(){
         const { onChangeName, onSave, onChange} = this;
-        const { name,location,description,imgUrl } = this.state;
+        const { name,location,description,imgUrl,errors } = this.state;
         const otherPuppiesList = this.props.notThisSchoolPuppies.map(puppy=><option key={puppy.id} value={puppy.id}>{puppy.name}</option>)
         const PuppiesList = this.props.thisSchoolPuppies.map(puppy=><div className="col-sm-4 col-md-4 col-lg-4" key={puppy.id} value={puppy.name}><p>{puppy.name}</p><img id ='puppyimage' className="img-responsive" src={puppy.imgUrl }></img></div>)
         return (
           <div>
           <h2>School Infor</h2>
           <form onSubmit={ onSave}>
-            <div><p><strong>Name</strong></p><input className="form-control" name = 'name' value={ name } onChange={ onChange }/></div>
+            <div><p><strong>Name</strong></p><input className="form-control" name = 'name' value={ name } onChange={ onChange }/>{errors.name}</div>
             <br></br>
-            <div><p><strong>Location</strong></p><input className="form-control" name ='location' value={ location } onChange={ onChange }/></div>
+            <div><p><strong>Location</strong></p><input className="form-control" name ='location' value={ location } onChange={ onChange }/>{errors.location}</div>
             <br></br>
             <div><p><strong>Image Url</strong></p><input className="form-control" name ='imgUrl' value={ imgUrl } onChange={ onChange }/></div>
             <br></br>

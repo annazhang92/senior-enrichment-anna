@@ -11,13 +11,24 @@ class PuppyUpdates extends Component{
           name:puppy ? puppy.name : '',
           gpa:puppy? puppy.gpa: '',
           imgUrl:puppy? puppy.imgUrl: '',
-          infor:''
+          infor:'',
+          errors:{}
       };
 
       this.onSave=this.onSave.bind(this)
       this.onChange=this.onChange.bind(this)
-      // this.handleChange=this.handleChange.bind(this)
-      // this.addStudent=this.addStudent.bind(this)
+      this.validators={
+        name:(value)=>{
+          if(!value){
+            return 'name is required'
+          }
+        },
+        gpa:(value)=>{
+          if(!value){
+            return 'gpa is required'
+          }
+        }
+      }
     }
 
 
@@ -28,6 +39,17 @@ class PuppyUpdates extends Component{
 
     onSave(ev){
         ev.preventDefault();
+        const errors = Object.keys(this.validators).reduce((memo,key)=>{
+          const validator =this.validators[key];
+          const value =this.state[key];
+          const error = validator(value);
+          if(error){memo[key]=error};
+          return memo;
+        },{})
+        this.setState({errors});
+        if(Object.keys(errors).length){
+          return;
+        }
         const puppy = { id:this.props.id, name: this.state.name, gpa: this.state.gpa,imgUrl:this.state.imgUrl};
         this.props.updatePuppy(this.props.id, puppy);
         this.setState({infor:'Information has been updated'})
@@ -58,7 +80,7 @@ class PuppyUpdates extends Component{
 
     render(){
         const { onSave, onChange} = this;
-        const { name,gpa,imgUrl } = this.state;
+        const { name,gpa,imgUrl,errors } = this.state;
         const otherSchoolsList = this.props.notThisPuppySchools.map(school=><option key={school.id} value={school.id}>{school.name}</option>)
         const SchoolList = this.props.thisPuppySchool.map(school=><div key={school.id} value={school.name}><p>{school.name}</p><img id ='schoolimagedetail' className="img-responsive" src={school.imgUrl }></img></div>)
       
@@ -66,9 +88,9 @@ class PuppyUpdates extends Component{
           <div>
           <h2>Puppy Infor</h2>
           <form onSubmit={ onSave }>
-            <div><p><strong>Name</strong></p><input className="form-control"name = 'name' value={ name } onChange={ onChange }/></div>
+            <div><p><strong>Name</strong></p><input className="form-control"name = 'name' value={ name } onChange={ onChange }/>{errors.name}</div>
             <br></br>
-            <div><p><strong>GPA</strong></p><input className="form-control" name ='gpa' value={ gpa } onChange={ onChange }/></div>
+            <div><p><strong>GPA</strong></p><input className="form-control" name ='gpa' value={ gpa } onChange={ onChange }/>{errors.gpa}</div>
             <br></br>
             <div><p><strong>Image Url</strong></p><input className="form-control" name ='imgUrl' value={ imgUrl } onChange={ onChange }/></div>
             <br></br>
@@ -81,7 +103,7 @@ class PuppyUpdates extends Component{
           <div>
           <p><strong>This Puppy's School</strong></p>
           <select className='btn btn-primary'onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
-          <option>None</option>
+          <option>Change School</option>
           {otherSchoolsList}
           </select>
           <div>
