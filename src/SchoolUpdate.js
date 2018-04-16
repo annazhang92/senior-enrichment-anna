@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import store,{updateSchool,updatePuppy}  from './store';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 class SchoolUpdates extends Component{
@@ -9,6 +10,8 @@ class SchoolUpdates extends Component{
       this.state = {
           name:school ? school.name : '',
           location:school? school.location: '',
+          description:school? school.description: '',
+          imgUrl:school? school.imgUrl: '',
           infor:''
       };
 
@@ -26,7 +29,7 @@ class SchoolUpdates extends Component{
 
     onSave(ev){
         ev.preventDefault();
-        const school = { id:this.props.id, name: this.state.name, location: this.state.location};
+        const school = { id:this.props.id, name: this.state.name, location: this.state.location, description:this.state.description, imgUrl:this.state.imgUrl};
         this.props.updateSchool(this.props.id, school)
         this.setState({infor:'Information has been updated'})
       }
@@ -50,39 +53,47 @@ class SchoolUpdates extends Component{
     componentWillReceiveProps(nextProps){
       this.setState({
         name: nextProps.school ? nextProps.school.name : '',
-        location: nextProps.school ? nextProps.school.location : ''
+        location: nextProps.school ? nextProps.school.location : '',
+        description: nextProps.school ? nextProps.school.description : ''
       });
     }
 
     render(){
         const { onChangeName, onSave, onChange} = this;
-        const { name,location } = this.state;
+        const { name,location,description,imgUrl } = this.state;
         const otherPuppiesList = this.props.notThisSchoolPuppies.map(puppy=><option key={puppy.id} value={puppy.id}>{puppy.name}</option>)
-        const PuppiesList = this.props.thisSchoolPuppies.map(puppy=><li key={puppy.id} value={puppy.name}>{puppy.name}</li>)
+        const PuppiesList = this.props.thisSchoolPuppies.map(puppy=><div className="col-sm-4 col-md-4 col-lg-4" key={puppy.id} value={puppy.name}><p>{puppy.name}</p><img id ='puppyimage' className="img-responsive" src={puppy.imgUrl }></img></div>)
         return (
           <div>
           <h2>School Infor</h2>
           <form onSubmit={ onSave}>
-            <div><p>Name</p><input name = 'name' value={ name } onChange={ onChange }/></div>
-            <div><p>Location</p><input name ='location' value={ location } onChange={ onChange }/></div>
-            <button>Save</button>
+            <div><p><strong>Name</strong></p><input className="form-control" name = 'name' value={ name } onChange={ onChange }/></div>
+            <br></br>
+            <div><p><strong>Location</strong></p><input className="form-control" name ='location' value={ location } onChange={ onChange }/></div>
+            <br></br>
+            <div><p><strong>Image Url</strong></p><input className="form-control" name ='imgUrl' value={ imgUrl } onChange={ onChange }/></div>
+            <br></br>
+            <div><p><strong>Description</strong></p><textarea className="form-control" row ='3' name ='description' value={ description } onChange={ onChange }/></div>
+            <br></br>
+            <button className='btn btn-warning'>Save</button>
+            <Link to={`/schools/${this.props.id}`}><button className='btn btn-primary'>Back</button></Link>
           </form>
-          
+          {this.state.infor && <p className='alert alert-info'>{this.state.infor}</p>}
 
           {this.props.school&&
           <div>
-          <h2>Puppies in this School</h2>
-          <ul>
-          {PuppiesList}
-          </ul>
-          <select onChange={(ev)=>this.props.updatePuppy(ev.target.value, {schoolId:this.props.id})}>
-          <option>None</option>
+          <p><strong>Puppies in this School</strong></p>
+          <select className='btn btn-primary' onChange={(ev)=>this.props.updatePuppy(ev.target.value, {schoolId:this.props.id})}>
+          <option>Add Puppy</option>
           {otherPuppiesList}
           </select>
+          <div className='container'>
+          {PuppiesList}
+          </div>
           </div>
           }
 
-          <p>{this.state.infor}</p>
+
 
           </div>
         );

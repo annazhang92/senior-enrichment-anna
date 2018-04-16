@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 
 const Nav = ()=> {
     return (
-      <ul>
+      <nav className="navbar navbar-default">
+      <div className="container-fluid">
+      <ul className="nav navbar-nav">
         <li>
           <Link to='/'>Home</Link>
         </li>
@@ -14,6 +16,8 @@ const Nav = ()=> {
           <Link to='/puppies'>Puppies</Link>
         </li>
       </ul>
+      </div>
+      </nav>
     );
   };
 export default Nav;

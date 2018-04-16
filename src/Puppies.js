@@ -7,22 +7,28 @@ const Puppies = ({puppies,deletePuppy})=> {
 
       const PuppiesList = puppies.map( puppy => {
         return (
-          <li key={ puppy.id }>
+          <div className="col-sm-4 col-md-4 col-lg-4" key={ puppy.id }>
+          <br></br>
+          <img id ='puppyimage' className="img-responsive" src={puppy.imgUrl }></img>
+          <br></br>
             <Link to={`/puppies/${puppy.id}`}>
+            <button className="btn btn-primary">
               { puppy.name }
+            </button>
             </Link>
-            <Link to={`/updatepuppies/${puppy.id}`}><button>Edit</button></Link>
-            <button onClick={()=>deletePuppy(puppy.id)}>Delete</button>
-          </li>
+            <br></br>
+            {/* <Link to={`/updatepuppies/${puppy.id}`}><button className="btn btn-warning">Edit</button></Link>
+            <button className="btn btn-danger"onClick={()=>deletePuppy(puppy.id)}>Delete</button> */}
+          </div>
         );
       })
 
       return (
         <div>
-        <Link to={`/createpuppy`}>Add A Puppy</Link>
-        <ul>
+        <Link to={`/createpuppy`}><button className="btn btn-primary">Add A Puppy</button></Link>
+        <div className="container">
         {PuppiesList}
-        </ul>
+        </div>
         </div>
       );
   }

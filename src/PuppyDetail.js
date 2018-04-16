@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import store,{updatePuppy}  from './store';
+import store,{updatePuppy,deletePuppy}  from './store';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 class PuppyDetail extends Component{
     constructor({puppy,id,thisPuppySchool,notThisPuppySchools}){
@@ -9,25 +10,32 @@ class PuppyDetail extends Component{
 
     render(){
       const otherSchoolsList = this.props.notThisPuppySchools.map(school=><option key={school.id} value={school.id}>{school.name}</option>)
-      const SchoolList = this.props.thisPuppySchool.map(school=><li key={school.id} value={school.name}>{school.name}</li>)
+      const SchoolList = this.props.thisPuppySchool.map(school=><div key={school.id} value={school.name}><Link to={`/schools/${school.id}`}><button className="btn btn-primary">{school.name}</button></Link><p></p><img id ='schoolimagedetail' className="img-responsive" src={school.imgUrl }></img></div>)
           return (
-            <div>
+            <div className='container'>
             {this.props.puppy &&
-            <ul>
-            <li>{this.props.puppy.name}</li>
-            <li>{this.props.puppy.gpa}</li>
-            </ul>
+            <div>
+            <h2>{this.props.puppy.name}</h2>
+            <div>
+            <Link to={`/updatepuppies/${this.props.puppy.id}`}><button className="btn btn-warning">Edit</button></Link>
+            <button className="btn btn-danger"onClick={()=>this.props.deletePuppy(this.props.puppy.id)}>Delete</button>
+            </div>
+            <br></br>
+            <img id='puppyimagedetail' className="img-responsive" src={this.props.puppy.imgUrl}></img>
+            <br></br>
+            <p><strong>GPA</strong> {this.props.puppy.gpa}</p>
+            </div>
             }
 
           <div>
-          <h2>This Puppy's School</h2>
-          <ul>
-          {SchoolList}
-          </ul>
-          <select onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
-          <option>None</option>
+          <p><strong>This Puppy's School</strong></p>
+          {/* <select className='btn btn-primary'onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
+          <option>Change School</option>
           {otherSchoolsList}
-          </select>
+          </select> */}
+          <div className='container'>
+          {this.props.thisPuppySchool.length>0 ?  SchoolList: <p className='alert alert-info'>This puppy has no school</p>}
+          </div>
           </div>
           </div>
           );
@@ -51,6 +59,7 @@ class PuppyDetail extends Component{
     const mapDispatchToProps = (dispatch, { history })=> {
         return {
           updatePuppy:(id,puppy)=>dispatch(updatePuppy(id,puppy, history)),
+          deletePuppy: (puppyid)=> dispatch(deletePuppy(puppyid, history)),
         };
       };
       

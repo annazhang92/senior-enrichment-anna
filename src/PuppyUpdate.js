@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import store,{updateSchool,updatePuppy}  from './store';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 class PuppyUpdates extends Component{
@@ -9,6 +10,7 @@ class PuppyUpdates extends Component{
       this.state = {
           name:puppy ? puppy.name : '',
           gpa:puppy? puppy.gpa: '',
+          imgUrl:puppy? puppy.imgUrl: '',
           infor:''
       };
 
@@ -26,7 +28,7 @@ class PuppyUpdates extends Component{
 
     onSave(ev){
         ev.preventDefault();
-        const puppy = { id:this.props.id, name: this.state.name, gpa: this.state.gpa};
+        const puppy = { id:this.props.id, name: this.state.name, gpa: this.state.gpa,imgUrl:this.state.imgUrl};
         this.props.updatePuppy(this.props.id, puppy);
         this.setState({infor:'Information has been updated'})
       }
@@ -56,33 +58,38 @@ class PuppyUpdates extends Component{
 
     render(){
         const { onSave, onChange} = this;
-        const { name,gpa } = this.state;
+        const { name,gpa,imgUrl } = this.state;
         const otherSchoolsList = this.props.notThisPuppySchools.map(school=><option key={school.id} value={school.id}>{school.name}</option>)
-        const SchoolList = this.props.thisPuppySchool.map(school=><li key={school.id} value={school.name}>{school.name}</li>)
+        const SchoolList = this.props.thisPuppySchool.map(school=><div key={school.id} value={school.name}><p>{school.name}</p><img id ='schoolimagedetail' className="img-responsive" src={school.imgUrl }></img></div>)
       
         return (
           <div>
           <h2>Puppy Infor</h2>
           <form onSubmit={ onSave }>
-            <div><p>Name</p><input name = 'name' value={ name } onChange={ onChange }/></div>
-            <div><p>GPA</p><input name ='gpa' value={ gpa } onChange={ onChange }/></div>
-            <button>Save</button>
+            <div><p><strong>Name</strong></p><input className="form-control"name = 'name' value={ name } onChange={ onChange }/></div>
+            <br></br>
+            <div><p><strong>GPA</strong></p><input className="form-control" name ='gpa' value={ gpa } onChange={ onChange }/></div>
+            <br></br>
+            <div><p><strong>Image Url</strong></p><input className="form-control" name ='imgUrl' value={ imgUrl } onChange={ onChange }/></div>
+            <br></br>
+            <button className='btn btn-warning'>Save</button>
+            <Link to={`/puppies/${this.props.id}`}><button className='btn btn-primary'>Back</button></Link>
           </form>
+          {this.state.infor && <p className='alert alert-info'>{this.state.infor}</p>}
 
-          {this.props.puppies&&
+          {this.props.puppy&&
           <div>
-          <h2>This Puppy's School</h2>
-          <ul>
-          {SchoolList}
-          </ul>
-          <select onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
+          <p><strong>This Puppy's School</strong></p>
+          <select className='btn btn-primary'onChange={(ev)=>this.props.updatePuppy(this.props.id, {schoolId:ev.target.value})}>
           <option>None</option>
           {otherSchoolsList}
           </select>
+          <div>
+          {SchoolList}
+          </div>
           </div>
           }
           
-          <p>{this.state.infor}</p>
           </div>
         );
     }

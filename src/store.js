@@ -66,6 +66,7 @@ const puppiesReducer = (state=[], action)=> {
       type: 'DESTROY_SCHOOL',
       school:{id}
     }))
+    .then( ()=> history.push('/schools'));
   }
   }
 
@@ -77,6 +78,7 @@ const puppiesReducer = (state=[], action)=> {
       type: 'DESTROY_PUPPY',
       puppy:{id}
     }))
+    .then( ()=> history.push('/puppies'));
   }
   }
 
